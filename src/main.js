@@ -11,9 +11,11 @@ if (isPWA()) {
     removeDocTitleOnPWA();
 
     const windowManager = new WindowManager({});
-        windowManager.setWindow({frameOptions: 'left=100,top=100,width=320,height=320'})
 
-    
-    document.addEventListener('click', open.bind(null))
+    document.addEventListener('click', ()=>{
+        windowManager.setWindow(window.managedWindows, {});
+        console.log(Array.from(window.managedWindows).at(-1).opener)
+        console.log(Array.from(window.managedWindows).at(-1).opener.name)
+    })
         
 }

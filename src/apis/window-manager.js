@@ -11,7 +11,7 @@ export default class WindowManager {
 
         window.name = openerName;
         if (window.name === openerName) {
-            window.windowQueue = new Set()
+            window.managedWindows = new Set();
         }
 
         // 2) Save this instance to the static property;
@@ -21,30 +21,13 @@ export default class WindowManager {
 
     }
 
-    setWindow({ frameOrigin = (window.origin || '/'), frameName = '_blank', frameOptions = 'popup' }) {
-        window.open = registerWindowOpener({frameOrigin, frameName, frameOptions});
+    setWindow(managedWindows, {frameOrigin = (window.origin || '/'), frameName = '_blank', frameOptions = 'left=100,top=100,width=320,height=320,popup'}) {
+        
+        window.name = `child-${managedWindows.size+1}`;
+        window.managedWindows.add(
+            window.open(frameOrigin, frameName, frameOptions)
+        );
+        
     }
 
-}
-
-function registerWindowOpener({frameOrigin, frameName, frameOptions}) {
-
-    return (
-        new Proxy(window.open, {
-        apply(target, thisArg, argArray /* <= will be overriden */) {
-            // Execute the original window.open
-            console.log(argArray);
-            
-            const newWindow = Reflect.apply(target, thisArg, /* argArray */[frameOrigin, frameName, "".concat(frameOptions, ',popup')]);
-            
-            // If a window was successfully opened, add it to our Set
-            if (newWindow) {
-                window.windowQueue.add(newWindow);
-            }
-            
-            return newWindow;
-        }
-        })  
-    );
-    
 }
