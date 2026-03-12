@@ -10,9 +10,16 @@ export default class WindowManager {
         }
 
         window.name = openerName;
-        if (window.name === openerName) {
-            window.managedWindows = new Set();
-        }
+        window.managedWindows = new Set();
+
+        // 3) When the parent closes, close all tracked child windows so they do not outlive the parent;
+        window.addEventListener('beforeunload', () => {
+            for (const child of window.managedWindows) {
+                if (child && !child.closed) {
+                    child.close();
+                }
+            }
+        });
 
         // 2) Save this instance to the static property;
         WindowManager.#instance = this;
@@ -21,13 +28,22 @@ export default class WindowManager {
 
     }
 
-    setWindow(managedWindows, {frameOrigin = (window.origin || '/'), frameName = '_blank', frameOptions = 'left=100,top=100,width=320,height=320,popup'}) {
-        
-        window.name = `child-${managedWindows.size+1}`;
-        window.managedWindows.add(
-            window.open(frameOrigin, frameName, frameOptions)
-        );
-        
+    setWindow(managedWindows, {frameOrigin = (window.origin || '/'), frameName, frameOptions = 'left=100,top=100,width=320,height=320,popup'}) {
+
+        // Give each child a unique name; this becomes child.name and establishes the parent-child relationship
+        // via window.open()'s second argument — do NOT mutate window.name here, as that would rename the parent.
+        const childName = frameName ?? `child-${managedWindows.size + 1}`;
+        const childWindow = window.open(frameOrigin, childName, frameOptions);
+
+        if (childWindow) {
+            managedWindows.add(childWindow);
+
+            // Remove child from the tracked set once it is closed;
+            childWindow.addEventListener('beforeunload', () => {
+                managedWindows.delete(childWindow);
+            });
+        }
+
     }
 
 }
