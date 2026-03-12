@@ -13,9 +13,14 @@ if (isPWA()) {
     const windowManager = new WindowManager({});
 
     document.addEventListener('click', ()=>{
-        windowManager.setWindow(window.managedWindows, {});
-        console.log(Array.from(window.managedWindows).at(-1).opener)
-        console.log(Array.from(window.managedWindows).at(-1).opener.name)
+        windowManager.setWindow(window?.managedWindows, {});
+
+        /**
+         * @debugger
+         */
+        let HOVER_ME_0;
+        /* console.log(Array.from(window.managedWindows).at(-1).opener)
+        console.log(Array.from(window.managedWindows).at(-1).opener.name) */
     })
         
 }

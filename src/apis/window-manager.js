@@ -2,21 +2,20 @@ export default class WindowManager {
 
     static #instance = null;
 
-    constructor({ openerName = 'window-manager'}) {
+    constructor() {
 
         // 1) Iff an instance already exists, return it instead of creating a new one;
         if (WindowManager.#instance) {
             return WindowManager.#instance;
         }
 
-        window.name = openerName;
         window.managedWindows = new Set();
 
-        // 3) When the parent closes, close all tracked child windows so they do not outlive the parent;
+        // 3) When the parent closes, close all tracked child windows (wnd) so they do not outlive the parent;
         window.addEventListener('beforeunload', () => {
-            for (const child of window.managedWindows) {
-                if (child && !child.closed) {
-                    child.close();
+            for (const wnd of window.managedWindows) {
+                if (wnd && !wnd.handle.closed) {
+                    wnd.handle.close();
                 }
             }
         });
@@ -36,7 +35,7 @@ export default class WindowManager {
         const childWindow = window.open(frameOrigin, childName, frameOptions);
 
         if (childWindow) {
-            managedWindows.add(childWindow);
+            managedWindows.add({id: childName, handle: childWindow });
 
             // Remove child from the tracked set once it is closed;
             childWindow.addEventListener('beforeunload', () => {
