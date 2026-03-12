@@ -4,8 +4,8 @@ const URLS_TO_CACHE = [
   '/index.html',
   '/src/main.js',
   '/manifest.webmanifest',
-  '/icon-192x192.png',
-  '/icon-512x512.png',
+  '/icon-192x192.svg',
+  '/icon-512x512.svg',
 ];
 
 // Install event - cache resources
