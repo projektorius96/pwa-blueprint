@@ -8,9 +8,25 @@
  *
  * @param {string} documentTitle Title to apply when running in a browser tab.
  */
-export function applyBrowserTitle(documentTitle = document.title) {
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    if (!isStandalone) {
-      document.title = documentTitle;
+export function removeDocTitleOnPWA() {
+    if (isPWA()) {
+      document.title = ""; // Chrome will use .webmanifest respective fields to set it internally
     }
 }
+
+export function isPWA() {
+
+  return (
+    window.matchMedia('(display-mode: standalone)').matches
+  );
+  
+}
+
+export function toList(iterable) {
+
+  return (
+    Array.from(iterable)
+  );
+
+}
+
