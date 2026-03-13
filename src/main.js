@@ -1,8 +1,8 @@
 import './style.css';
-import { isPWA, removeDocTitleOnPWA } from './utils.js';
+import { isPWA, removeDocTitleOnPWA, toList } from './utils.js';
 import WindowManager from './apis/window-manager.js';
 
-if (isPWA()) {
+if ( isPWA() ) {
 
     /**
      * @tutorial
@@ -13,14 +13,28 @@ if (isPWA()) {
     const windowManager = new WindowManager({});
 
     document.addEventListener('click', ()=>{
-        windowManager.setWindow(window?.managedWindows, {});
+        
+        // DEV_NOTE # herein we explicitly pass "window.managedWindows" on every click as the WindowManager is a "static" Singleton
+        windowManager.setWindow(window.managedWindows, {});
 
         /**
-         * @debugger
+         * @debugger (RETURNS_x1)
+         * @description should return a list of "window.managedWindows" with Array.prototype    | [PASSING]
          */
-        let HOVER_ME_0;
-        /* console.log(Array.from(window.managedWindows).at(-1).opener)
-        console.log(Array.from(window.managedWindows).at(-1).opener.name) */
+        let DEBUGGER_x1; {
+            console.log( toList(window.managedWindows).at(-1).name )
+            console.log( toList(window.managedWindows).at(-1) )
+        }
+
+        /**
+         * @debugger (RETURNS_x2)
+         * @description should return last "nth" child window added to "window.managedWindows" | [PASSING]
+         */
+        let DEBUGGER_x2; {
+            console.log( toList(window.managedWindows).at(-1).name )
+            console.log( toList(window.managedWindows).at(-1) )
+        }
+
     })
         
 }

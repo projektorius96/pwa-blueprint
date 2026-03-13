@@ -14,8 +14,8 @@ export default class WindowManager {
         // 3) When the parent closes, close all tracked child windows (wnd) so they do not outlive the parent;
         window.addEventListener('beforeunload', () => {
             for (const wnd of window.managedWindows) {
-                if (wnd && !wnd.handle.closed) {
-                    wnd.handle.close();
+                if ( !(wnd?.closed) ) {
+                    wnd.close();
                 }
             }
         });
@@ -35,7 +35,7 @@ export default class WindowManager {
         const childWindow = window.open(frameOrigin, childName, frameOptions);
 
         if (childWindow) {
-            managedWindows.add({id: childName, handle: childWindow });
+            managedWindows.add(childWindow);
 
             // Remove child from the tracked set once it is closed;
             childWindow.addEventListener('beforeunload', () => {

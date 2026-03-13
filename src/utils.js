@@ -22,3 +22,11 @@ export function isPWA() {
   
 }
 
+export function toList(iterable) {
+
+  return (
+    Array.from(iterable)
+  );
+
+}
+
