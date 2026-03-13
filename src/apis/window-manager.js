@@ -9,7 +9,6 @@ export default class WindowManager {
             return WindowManager.#instance;
         }
 
-        window.name = openerName;
         window.managedWindows = new Set();
 
         // 3) When the parent closes, close all tracked child windows so they do not outlive the parent;
