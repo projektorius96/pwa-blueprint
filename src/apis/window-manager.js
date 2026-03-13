@@ -9,13 +9,14 @@ export default class WindowManager {
             return WindowManager.#instance;
         }
 
+        window.name = openerName;
         window.managedWindows = new Set();
 
-        // 3) When the parent closes, close all tracked child windows (wnd) so they do not outlive the parent;
+        // 3) When the parent closes, close all tracked child windows so they do not outlive the parent;
         window.addEventListener('beforeunload', () => {
-            for (const wnd of window.managedWindows) {
-                if (wnd && !wnd.handle.closed) {
-                    wnd.handle.close();
+            for (const child of window.managedWindows) {
+                if (child && !child.closed) {
+                    child.close();
                 }
             }
         });
